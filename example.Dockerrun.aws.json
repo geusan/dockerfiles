@@ -1,0 +1,18 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Ports": [
+    {
+      "ContainerPort": "CONTAINER_PORT",
+      "HostPort": "HOST_PORT"
+    }
+  ],
+  "Volumes": [
+    {
+      "ContainerDirectory": "path/to/container",
+      "HostDirectory": "path/to/host"
+    }
+  ],
+  "Logging": "path/to/logging",
+  "Entrypoint": "what to do when docker start",
+  "Command": "--arguments for Entrypoint"
+}

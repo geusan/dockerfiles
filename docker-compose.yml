@@ -1,0 +1,50 @@
+version: "3.7"
+services: 
+  server:
+    image: image-name
+    build:
+      context: path/to/project
+      dockerfile: path/to/Dockerfile
+    environment:
+      ENV_VAR0: something0
+      ENV_VAR1: something1
+    volumes: 
+      - host/path/to/project:/container/path/to/project
+    links: 
+      - mariadb
+      - mysql
+      - postgres
+      - mongo
+    depends_on: 
+      - mariadb
+      - mysql
+      - postgres
+      - mongo
+    ports:
+      - PORT:PORT
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    # mysql과 포트가 겹칠 수 있어서 변경.
+    ports:
+      - 3305:3306
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - 3306:3306
+  postgres:
+    image: postgres
+    environment: 
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root_password
+    ports:
+      - 5432:5432
+  mongo:
+    image: mongo
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root_password
+

@@ -18,37 +18,44 @@ Dockerrun.aws.json을 사용하는 경우(example.Dockerrun.aws.json 파일 참�
 
 1. Dockerfile 을 골라서 프로젝트에 위치 시킨다.
 2. 도커 빌드 후에 잘 동작하는지 테스트 한다.
-  ```
-    # 도커 이미지 빌드
-    docker build -t {tag_name} .
+```bash
+  # 도커 이미지 빌드
+  docker build -t {tag_name} .
 
-    # 빌드 된 이미지로 컨테이너 생성(옵션을 추가로 줘서 포트를 연결해야 연결이 가능하다.)
-    docker run {tag_name}
+  # 빌드 된 이미지로 컨테이너 생성(옵션을 추가로 줘서 포트를 연결해야 연결이 가능하다.)
+  docker run {tag_name}
 
-    # 컨테이너 로그 보는 방법
-    docker logs {container_name}
+  # 컨테이너 로그 보는 방법
+  docker logs {container_name}
 
-    # 컨테이너 내부 접속하는 방법
-    docker exec -it {container_name} bash
-  ```
+  # 컨테이너 내부 접속하는 방법
+  docker exec -it {container_name} bash
+```
 3. eb를 이용하여 배포한다.
-  ```
-    # 최초 실행시
-    eb init
-    eb create
-    
-    # 초기화한 이후에 기존 앱 재배포
-    eb deploy
-  ```
+```bash
+  # 최초 실행시
+  eb init
+  eb create
+  
+  # 초기화한 이후에 기존 앱 재배포
+  eb deploy
+```
 
 ## Django와 NodeJs 배포 예시가 추가되었다.
-- Django
-  `cd django && eb create`
-- NodejJs
-  `cd nodejs && eb create`
+- [Django](./django)
+- [NodejJs](./nodejs)
 
-# 배포시 환경변수와 셋팅 추가하기
-- `.ebextnsions`
 
-### 개발시에 유용할 수 있는 것
+## eb 도커 파일을 추가했다.
+윈도우 친구들도 도커만 있다면 eb 컨테이너를 만들어서 배포 환경을 사용할 수 있다.
+```bash
+# 도커 빌드
+docker build -t ebcli -f ebcli.Dockerfile
+# 컨테이너 실행
+docker run -it --rm --entrypoint bash ebcli
+# 컨테이너 접속후 eb 명령어 입력(최초 실행시 인증 정보가 필요하다. volume으로 로컬 컴퓨터의 파일을 연결하면 편하다.)
+eb init
+```
+
+## 개발시에 유용할 수 있는 것
 `docker-compose.yml` 데이터베이스 컨테이너와 서버 컨테이너를 동시에 올리고 연결하여 로컬내에서 서비스를 개발할 수 있는 환경을 구성할 수 있다. 실서버의 데이터를 건드리지 않고 유지보수를 하고싶을 때, 실서버의 데이터를 덤프를 떠서 실서버 데이터와 완전히 일치하는 로컬 디비를 올려서 테스트 및 개발을 하면 좋다.

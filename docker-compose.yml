@@ -38,8 +38,8 @@ services:
   postgres:
     image: postgres
     environment: 
-      POSTGRES_PASSWORD: root
-      POSTGRES_USER: root_password
+      POSTGRES_PASSWORD: root_password
+      POSTGRES_USER: root
     ports:
       - 5432:5432
   mongo:
@@ -47,4 +47,6 @@ services:
     environment: 
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root_password
+    ports:
+      - 27017:27017
 

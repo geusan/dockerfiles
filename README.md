@@ -1,14 +1,54 @@
 # Docker와 배포하기
 
-도커 사용과 단일 컨테이너 배포에는 `Dockerfile` 과 `Dockerrun.aws.json`이 필요하다.
-1. 알맞는 플랫폼을 선택하고 Dockerfile 을 골라서 프로젝트에 위치 시킨다.
-2. 도커 빌드 후에 잘 동작하는지 테스트 한다.
-3. eb를 이용하여 배포한다.
+도커 사용과 단일 컨테이너 배포에는 프로젝트 root 위치에 Dockerfile 하나만 있거나 Dockerrun.aws.json 가 함께 있어야한다.
+Dockerrun.aws.json이 없는 경우에는 Dockerfile 내의 `EXPOSE` 명령어로 지정한 포트를 기본으로 라우팅 해준다. 없는 경우에는 기본 포트(?) 라서 도커 내의 서버에 연결을 못할 수 있으니까(뇌피셜). 명시해주도록 하자.
 
+Dockerrun.aws.json을 사용하는 경우(example.Dockerrun.aws.json 파일 참조) 아래의 설정만 잘 해주면 문제가 없다.
+```
+  {
+  "AWSEBDockerrunVersion": "1",
+  "Ports": [
+    {
+      "ContainerPort": "CONTAINER_PORT", <= 컨테이너(서버의 포트)
+      "HostPort": "HOST_PORT" <= 외부에서 접근할 포트
+    }
+  ]
+}
+```
+
+1. Dockerfile 을 골라서 프로젝트에 위치 시킨다.
+2. 도커 빌드 후에 잘 동작하는지 테스트 한다.
+  ```
+    # 도커 이미지 빌드
+    docker build -t {tag_name} .
+
+    # 빌드 된 이미지로 컨테이너 생성(옵션을 추가로 줘서 포트를 연결해야 연결이 가능하다.)
+    docker run {tag_name}
+
+    # 컨테이너 로그 보는 방법
+    docker logs {container_name}
+
+    # 컨테이너 내부 접속하는 방법
+    docker exec -it {container_name} bash
+  ```
+3. eb를 이용하여 배포한다.
+  ```
+    # 최초 실행시
+    eb init
+    eb create
+    
+    # 초기화한 이후에 기존 앱 재배포
+    eb deploy
+  ```
+
+## Django와 NodeJs 배포 예시가 추가되었다.
+- Django
+  `cd django && eb create`
+- NodejJs
+  `cd nodejs && eb create`
 
 # 배포시 환경변수와 셋팅 추가하기
 - `.ebextnsions`
-- `.ebignore`
 
 ### 개발시에 유용할 수 있는 것
 `docker-compose.yml` 데이터베이스 컨테이너와 서버 컨테이너를 동시에 올리고 연결하여 로컬내에서 서비스를 개발할 수 있는 환경을 구성할 수 있다. 실서버의 데이터를 건드리지 않고 유지보수를 하고싶을 때, 실서버의 데이터를 덤프를 떠서 실서버 데이터와 완전히 일치하는 로컬 디비를 올려서 테스트 및 개발을 하면 좋다.

@@ -45,7 +45,7 @@ Dockerrun.aws.json을 사용하는 경우(example.Dockerrun.aws.json 파일 참�
 
 ## Django와 NodeJs 배포 예시가 추가되었다.
 - [Django](./django)
-- [NodejJs](./nodejs)
+- [NodeJs](./nodejs)
 
 
 ## ebcli.Dockerfile
